@@ -16,8 +16,8 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
   onResetProject,
 }) => {
   const themes: { id: EditorTheme; name: string }[] = [
-    { id: 'vs-dark', name: 'VS Code Dark+' },
-    { id: 'vs-light', name: 'VS Code Light' },
+    { id: 'vs-dark', name: 'Dark+' },
+    { id: 'vs-light', name: 'Light+' },
     { id: 'hc-black', name: 'High Contrast Dark' },
     { id: 'github-light', name: 'GitHub Light' },
   ];
