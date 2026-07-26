@@ -10,6 +10,7 @@ import {
   Circle,
   Wifi,
   WifiOff,
+  Code2,
 } from 'lucide-react';
 import { SidebarTab } from '../types';
 
@@ -41,11 +42,9 @@ export const ActivityBar: React.FC<ActivityBarProps> = ({
   return (
     <div className="w-12 md:w-14 bg-[#333333] dark:bg-[#181818] text-[#cccccc] flex flex-col justify-between items-center py-2 z-20 border-r border-[#2b2b2b] select-none shrink-0">
       <div className="flex flex-col items-center gap-1 w-full">
-        {/* VS Code Logo */}
-        <div className="mb-3 text-[#007acc] p-1 hover:scale-105 transition-transform cursor-pointer" title="VS Code Studio">
-          <svg className="w-6 h-6 fill-current" viewBox="0 0 24 24">
-            <path d="M23.15 2.587L18.21.21a1.494 1.494 0 0 0-1.705.29l-9.46 8.63-4.12-3.12a.75.75 0 0 0-.96.06L.25 7.63a.75.75 0 0 0 .02 1.09l4.5 4.1-4.5 4.1a.75.75 0 0 0-.02 1.09l1.71 1.56a.75.75 0 0 0 .96.06l4.12-3.12 9.46 8.63c.48.44 1.18.55 1.705.29l4.94-2.377A1.5 1.5 0 0 0 24 21.843V3.911a1.5 1.5 0 0 0-.85-1.324zM18 17.586l-6.5-5.586L18 6.414v11.172z" />
-          </svg>
+        {/* Studio Brand Icon */}
+        <div className="mb-3 text-[#007acc] p-1.5 hover:scale-105 transition-transform cursor-pointer" title="Collaborative Studio">
+          <Code2 className="w-6 h-6 text-[#007acc]" />
         </div>
 
         {/* Action Tabs */}

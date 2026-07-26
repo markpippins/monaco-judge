@@ -287,7 +287,7 @@ export default function App() {
       language: isFolder ? undefined : langMap[ext || ''] || 'plaintext',
       content: isFolder
         ? undefined
-        : `// ${name}\n// Created in VS Code Collaborative Studio\n\nconsole.log("Hello from ${name}!");\n`,
+        : `// ${name}\n// Created in Cloud Studio\n\nconsole.log("Hello from ${name}!");\n`,
       children: isFolder ? [] : undefined,
     };
 
@@ -610,7 +610,7 @@ export default function App() {
       <div className="md:hidden flex items-center justify-between px-3 py-2 bg-[#252526] border-b border-[#2d2d2d] z-30">
         <div className="flex items-center gap-2 text-white font-semibold text-sm">
           <Code2 className="w-5 h-5 text-[#007acc]" />
-          <span>VS Code Studio</span>
+          <span>Cloud Studio</span>
         </div>
 
         <div className="flex items-center gap-2">

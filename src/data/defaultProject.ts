@@ -31,8 +31,8 @@ export const DEFAULT_FILES: FileItem[] = [
         language: 'typescript',
         parentId: 'f-1',
         content: `/**
- * Collaborative Real-Time Studio
- * Welcome to VS Code Collaborative Studio!
+ * Collaborative Real-Time Cloud Studio
+ * Welcome to Cloud Studio!
  */
 
 interface UserProfile {
@@ -151,22 +151,65 @@ int main() {
     type: 'file',
     language: 'markdown',
     parentId: null,
-    content: `# 💻 VS Code Collaborative Studio
+    content: `# 💻 Cloud Collaborative Studio
 
 Welcome to your cloud-based real-time collaborative development workspace!
 
 ## ✨ Key Features
-- **Monaco Code Editor**: Premium VS Code editor experience with multi-theme support.
+- **Monaco Code Editor**: Premium editor experience with multi-theme support.
 - **Judge0 Execution**: Run code in 10+ languages (Python, TypeScript, C++, Java, Go, Rust) with full stdout/stderr capture.
 - **Real-Time Collaboration**: Multi-user editing, line/cursor synchronization, presence indicators via WebSockets.
 - **Integrated Terminal**: Shell interface, Node REPL, interactive execution logs.
 - **Version History & Diffs**: Instant snapshots, visual Monaco side-by-side file diffs, and version restoration.
-- **Cloud File System**: Save projects across sessions and access seamlessly on mobile/tablet devices.
+- **Documentation**: Includes built-in USER_GUIDE.md and INTEGRATION_GUIDE.md.
 
 ## 🚀 Quick Start
 1. Open any file in the sidebar tree.
 2. Click **Run Code** (Ctrl+Enter / Cmd+Enter) to execute on Judge0.
 3. Invite collaborators using your Room Code in the **Collaboration** tab.
+`,
+  },
+  {
+    id: 'f-user-guide',
+    name: 'USER_GUIDE.md',
+    path: 'USER_GUIDE.md',
+    type: 'file',
+    language: 'markdown',
+    parentId: null,
+    content: `# Cloud Studio User Guide
+
+Welcome to **Cloud Studio** — a real-time collaborative development environment designed for modern web applications.
+
+## 1. Quick Start & Interface Overview
+- **Activity Bar**: Navigation panels for Files, Search, Git, Execution, Collaborators, Terminal, and Settings.
+- **Sidebar**: File explorer, global search, and version control.
+- **Editor Canvas**: Multi-tab code editor with syntax highlighting and live collaboration.
+- **Preview & Terminal**: Live application preview iframe and interactive shell execution logs.
+
+## 2. Workflows
+- **Code Execution**: Run code snippet via Judge0 with instant stdout/stderr.
+- **Real-Time Presence**: Live cursor sync and active user roster.
+- **Git Control**: Stage, commit, and manage branches.
+`,
+  },
+  {
+    id: 'f-integration-guide',
+    name: 'INTEGRATION_GUIDE.md',
+    path: 'INTEGRATION_GUIDE.md',
+    type: 'file',
+    language: 'markdown',
+    parentId: null,
+    content: `# Cloud Studio Integration Guide
+
+Technical architecture, WebSocket protocols, and deployment procedures.
+
+## 1. System Architecture
+React single-page app (Vite) + Express Node.js backend with WebSocket server on port 3000.
+
+## 2. API Endpoints
+- \`GET /api/files\`: Fetch project file hierarchy
+- \`POST /api/files/save\`: Save file contents
+- WebSocket event stream for real-time collaborator cursor tracking & edits.
 `,
   },
   {
@@ -179,7 +222,7 @@ Welcome to your cloud-based real-time collaborative development workspace!
     content: `{
   "name": "collaborative-cloud-workspace",
   "version": "1.0.0",
-  "description": "Real-time VS Code Studio environment",
+  "description": "Real-time Cloud Studio environment",
   "main": "src/index.ts",
   "scripts": {
     "start": "node dist/index.js",
