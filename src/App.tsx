@@ -617,7 +617,7 @@ export default function App() {
           <button
             onClick={handleExecuteCode}
             disabled={isExecuting}
-            className="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-500 text-white rounded text-xs font-semibold flex items-center gap-1"
+            className="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-500 text-white rounded text-sm font-semibold flex items-center gap-1"
           >
             <Play className="w-3 h-3 fill-current" />
             <span>Run</span>

@@ -116,7 +116,7 @@ export const FileTree: React.FC<FileTreeProps> = ({
               }
             }}
             style={{ paddingLeft: `${level * 12 + 12}px` }}
-            className={`group flex items-center justify-between py-1 pr-2 text-xs cursor-pointer rounded-sm hover:bg-[#2a2d2e] transition-colors ${
+            className={`group flex items-center justify-between py-1 pr-2 text-sm cursor-pointer rounded-sm hover:bg-[#2a2d2e] transition-colors ${
               isActive ? 'bg-[#37373d] text-white font-medium' : 'text-[#cccccc]'
             }`}
           >
@@ -155,7 +155,7 @@ export const FileTree: React.FC<FileTreeProps> = ({
                     onChange={(e) => setRenameValue(e.target.value)}
                     autoFocus
                     onBlur={() => setRenamingId(null)}
-                    className="w-full bg-[#1e1e1e] border border-[#007acc] text-white text-xs px-1 rounded outline-none"
+                    className="w-full bg-[#1e1e1e] border border-[#007acc] text-white text-sm px-1 rounded outline-none"
                   />
                 </form>
               ) : (
@@ -237,7 +237,7 @@ export const FileTree: React.FC<FileTreeProps> = ({
                     onKeyDown={(e) => {
                       if (e.key === 'Escape') setCreatingItem(null);
                     }}
-                    className="w-full bg-[#1e1e1e] border border-[#007acc] text-white text-xs px-1 py-0.5 rounded outline-none"
+                    className="w-full bg-[#1e1e1e] border border-[#007acc] text-white text-sm px-1 py-0.5 rounded outline-none"
                   />
                 </form>
               </div>
@@ -255,7 +255,7 @@ export const FileTree: React.FC<FileTreeProps> = ({
   };
 
   return (
-    <div className="flex flex-col h-full bg-[#252526] text-[#cccccc] text-xs">
+    <div className="flex flex-col h-full bg-[#252526] text-[#cccccc] text-sm">
       {/* Header bar */}
       <div className="flex items-center justify-between px-3 py-2 border-b border-[#333333] tracking-wide font-semibold text-[11px] uppercase text-[#bbbbbb]">
         <span>EXPLORER</span>
@@ -295,7 +295,7 @@ export const FileTree: React.FC<FileTreeProps> = ({
               onKeyDown={(e) => {
                 if (e.key === 'Escape') setCreatingItem(null);
               }}
-              className="w-full bg-[#1e1e1e] border border-[#007acc] text-white text-xs px-1.5 py-0.5 rounded outline-none"
+              className="w-full bg-[#1e1e1e] border border-[#007acc] text-white text-sm px-1.5 py-0.5 rounded outline-none"
             />
           </form>
         </div>

@@ -30,7 +30,7 @@ export const VersionHistoryPanel: React.FC<VersionHistoryPanelProps> = ({
   };
 
   return (
-    <div className="flex flex-col h-full bg-[#252526] text-[#cccccc] text-xs">
+    <div className="flex flex-col h-full bg-[#252526] text-[#cccccc] text-sm">
       <div className="flex items-center justify-between px-3 py-2 border-b border-[#333333] tracking-wide font-semibold text-[11px] uppercase text-[#bbbbbb]">
         <span className="flex items-center gap-1.5">
           <GitCommit className="w-4 h-4 text-[#007acc]" />
@@ -54,20 +54,20 @@ export const VersionHistoryPanel: React.FC<VersionHistoryPanelProps> = ({
             onChange={(e) => setCommitMessage(e.target.value)}
             placeholder="e.g., Added fibonacci algorithm & fixed types"
             autoFocus
-            className="w-full bg-[#252526] border border-[#007acc] text-white text-xs px-2 py-1.5 rounded outline-none mb-2"
+            className="w-full bg-[#252526] border border-[#007acc] text-white text-sm px-2 py-1.5 rounded outline-none mb-2"
           />
           <div className="flex justify-end gap-2">
             <button
               type="button"
               onClick={() => setIsCreating(false)}
-              className="px-2.5 py-1 bg-[#333333] hover:bg-[#444444] text-white rounded text-xs"
+              className="px-2.5 py-1 bg-[#333333] hover:bg-[#444444] text-white rounded text-sm"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={!commitMessage.trim()}
-              className="px-2.5 py-1 bg-[#007acc] hover:bg-[#0062a3] text-white rounded text-xs disabled:opacity-50"
+              className="px-2.5 py-1 bg-[#007acc] hover:bg-[#0062a3] text-white rounded text-sm disabled:opacity-50"
             >
               Commit
             </button>
@@ -100,7 +100,7 @@ export const VersionHistoryPanel: React.FC<VersionHistoryPanelProps> = ({
                 }`}
               >
                 <div className="flex items-start justify-between gap-1 mb-1">
-                  <span className="font-semibold text-white text-xs leading-snug">
+                  <span className="font-semibold text-white text-sm leading-snug">
                     {ver.message}
                   </span>
                   <span className="font-mono text-[10px] bg-[#2a2d2e] px-1.5 py-0.5 rounded text-[#007acc] shrink-0">

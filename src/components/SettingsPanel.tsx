@@ -23,7 +23,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
   ];
 
   return (
-    <div className="flex flex-col h-full bg-[#252526] text-[#cccccc] text-xs">
+    <div className="flex flex-col h-full bg-[#252526] text-[#cccccc] text-sm">
       <div className="flex items-center px-3 py-2 border-b border-[#333333] tracking-wide font-semibold text-[11px] uppercase text-[#bbbbbb]">
         <span className="flex items-center gap-1.5">
           <Settings className="w-4 h-4 text-[#007acc]" />
@@ -34,7 +34,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
       <div className="flex-1 overflow-y-auto p-3 space-y-4 custom-scrollbar">
         {/* Editor Theme Section */}
         <div className="bg-[#1e1e1e] p-3 rounded border border-[#333333] space-y-2">
-          <div className="flex items-center gap-2 font-semibold text-white text-xs mb-1">
+          <div className="flex items-center gap-2 font-semibold text-white text-sm mb-1">
             <Palette className="w-4 h-4 text-purple-400" />
             <span>Monaco Syntax Highlight Theme</span>
           </div>
@@ -44,7 +44,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
               <button
                 key={t.id}
                 onClick={() => setTheme(t.id)}
-                className={`flex items-center justify-between p-2 rounded text-xs font-medium transition-colors ${
+                className={`flex items-center justify-between p-2 rounded text-sm font-medium transition-colors ${
                   theme === t.id
                     ? 'bg-[#007acc] text-white'
                     : 'bg-[#252526] hover:bg-[#2d2d2d] text-[#cccccc]'
@@ -59,7 +59,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
 
         {/* Cloud Persistence Section */}
         <div className="bg-[#1e1e1e] p-3 rounded border border-[#333333] space-y-2">
-          <div className="flex items-center gap-2 font-semibold text-white text-xs mb-1">
+          <div className="flex items-center gap-2 font-semibold text-white text-sm mb-1">
             <HardDrive className="w-4 h-4 text-emerald-400" />
             <span>Cloud Project Persistence</span>
           </div>
@@ -79,7 +79,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
 
         {/* Reset Workspace Section */}
         <div className="bg-[#1e1e1e] p-3 rounded border border-[#333333] space-y-2">
-          <div className="flex items-center gap-2 font-semibold text-white text-xs mb-1">
+          <div className="flex items-center gap-2 font-semibold text-white text-sm mb-1">
             <RefreshCw className="w-4 h-4 text-amber-400" />
             <span>Workspace Reset</span>
           </div>

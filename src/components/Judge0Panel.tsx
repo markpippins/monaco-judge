@@ -29,7 +29,7 @@ export const Judge0Panel: React.FC<Judge0PanelProps> = ({
   const selectedLang = JUDGE0_LANGUAGES.find((l) => l.id === selectedLanguageId) || JUDGE0_LANGUAGES[0];
 
   return (
-    <div className="flex flex-col h-full bg-[#252526] text-[#cccccc] text-xs">
+    <div className="flex flex-col h-full bg-[#252526] text-[#cccccc] text-sm">
       <div className="flex items-center justify-between px-3 py-2 border-b border-[#333333] tracking-wide font-semibold text-[11px] uppercase text-[#bbbbbb]">
         <span className="flex items-center gap-1.5 text-emerald-400">
           <Play className="w-4 h-4" />
@@ -42,7 +42,7 @@ export const Judge0Panel: React.FC<Judge0PanelProps> = ({
 
       <div className="p-3 border-b border-[#333333] space-y-3 bg-[#1e1e1e]">
         {/* Active File Context */}
-        <div className="flex items-center justify-between text-xs">
+        <div className="flex items-center justify-between text-sm">
           <span className="text-[#858585]">Target File:</span>
           <span className="font-mono text-white bg-[#2d2d2d] px-2 py-0.5 rounded border border-[#3c3c3c]">
             {activeFileName || 'No file selected'}
@@ -57,7 +57,7 @@ export const Judge0Panel: React.FC<Judge0PanelProps> = ({
           <select
             value={selectedLanguageId}
             onChange={(e) => setSelectedLanguageId(Number(e.target.value))}
-            className="w-full bg-[#252526] border border-[#3c3c3c] focus:border-[#007acc] text-white text-xs px-2 py-1.5 rounded outline-none"
+            className="w-full bg-[#252526] border border-[#3c3c3c] focus:border-[#007acc] text-white text-sm px-2 py-1.5 rounded outline-none"
           >
             {JUDGE0_LANGUAGES.map((lang) => (
               <option key={lang.id} value={lang.id}>
@@ -77,7 +77,7 @@ export const Judge0Panel: React.FC<Judge0PanelProps> = ({
             onChange={(e) => setStdin(e.target.value)}
             placeholder="Pass custom runtime input parameters here..."
             rows={3}
-            className="w-full bg-[#252526] border border-[#3c3c3c] focus:border-[#007acc] text-white font-mono text-xs p-2 rounded outline-none resize-none"
+            className="w-full bg-[#252526] border border-[#3c3c3c] focus:border-[#007acc] text-white font-mono text-sm p-2 rounded outline-none resize-none"
           />
         </div>
 
@@ -114,7 +114,7 @@ export const Judge0Panel: React.FC<Judge0PanelProps> = ({
               )}
             </div>
 
-            <div className="grid grid-cols-2 gap-2 text-xs">
+            <div className="grid grid-cols-2 gap-2 text-sm">
               <div className="bg-[#1e1e1e] p-2 rounded border border-[#333333] flex items-center gap-2">
                 <Clock className="w-4 h-4 text-blue-400" />
                 <div>
@@ -141,7 +141,7 @@ export const Judge0Panel: React.FC<Judge0PanelProps> = ({
               <div className="text-[11px] font-semibold text-[#858585] mb-1">
                 STDOUT Output:
               </div>
-              <pre className="font-mono text-xs bg-[#1e1e1e] p-2.5 rounded border border-[#333333] text-emerald-300 max-h-48 overflow-y-auto whitespace-pre-wrap">
+              <pre className="font-mono text-sm bg-[#1e1e1e] p-2.5 rounded border border-[#333333] text-emerald-300 max-h-48 overflow-y-auto whitespace-pre-wrap">
                 {lastResult.stdout || '(Empty output)'}
               </pre>
             </div>
@@ -152,7 +152,7 @@ export const Judge0Panel: React.FC<Judge0PanelProps> = ({
                 <div className="text-[11px] font-semibold text-red-400 mb-1">
                   STDERR Errors:
                 </div>
-                <pre className="font-mono text-xs bg-[#1e1e1e] p-2.5 rounded border border-[#333333] text-red-300 max-h-48 overflow-y-auto whitespace-pre-wrap">
+                <pre className="font-mono text-sm bg-[#1e1e1e] p-2.5 rounded border border-[#333333] text-red-300 max-h-48 overflow-y-auto whitespace-pre-wrap">
                   {lastResult.stderr}
                 </pre>
               </div>
@@ -161,7 +161,7 @@ export const Judge0Panel: React.FC<Judge0PanelProps> = ({
         ) : (
           <div className="text-center p-6 text-[#858585] space-y-2">
             <Cpu className="w-8 h-8 mx-auto text-[#444444]" />
-            <p className="text-xs">
+            <p className="text-sm">
               Select target runtime and click <strong>Run Code</strong> or press{' '}
               <kbd className="bg-[#333333] px-1 py-0.5 rounded text-white font-mono text-[10px]">
                 Ctrl+Enter
