@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import {
   SidebarTab,
   FileItem,
@@ -17,13 +17,16 @@ import { TerminalPanel } from './components/TerminalPanel';
 import { StatusBar } from './components/StatusBar';
 import { realtimeSocket } from './services/websocket';
 import { executeCode } from './services/judge0';
+import { fileSystem, deriveLanguage, baseName } from './services/fileSystem';
 import { Play, Code2, Users, Menu, Sparkles } from 'lucide-react';
 
 export default function App() {
   // Project & File System State
   const [project, setProject] = useState<Project>(DEFAULT_PROJECT);
-  const [openFileIds, setOpenFileIds] = useState<string[]>(['f-1-1', 'f-1-2']);
-  const [activeFileId, setActiveFileId] = useState<string | null>('f-1-1');
+  const [openFileIds, setOpenFileIds] = useState<string[]>([]);
+  const [activeFileId, setActiveFileId] = useState<string | null>(null);
+  // File-system-server browse buffers (path-keyed; content fetched lazily on open)
+  const [fsBuffers, setFsBuffers] = useState<Record<string, FileItem>>({});
 
   // UI Panels State
   const [activeTab, setActiveTab] = useState<SidebarTab | null>('explorer');
@@ -185,10 +188,19 @@ export default function App() {
 
   // File Operations
   const updateFileContentLocally = (fileId: string, content: string) => {
+    // Prefer the file-system-server buffer when the id is an fs path.
+    setFsBuffers((prev) =>
+      prev[fileId]
+        ? { ...prev, [fileId]: { ...prev[fileId], content, updatedAt: Date.now() } }
+        : prev
+    );
+    // Otherwise fall back to the cloud project tree.
     setProject((prev) => {
+      let found = false;
       const updateRecursive = (items: FileItem[]): FileItem[] => {
         return items.map((item) => {
           if (item.id === fileId) {
+            found = true;
             return { ...item, content, updatedAt: Date.now() };
           }
           if (item.children) {
@@ -198,6 +210,7 @@ export default function App() {
         });
       };
       const newFiles = updateRecursive(prev.files);
+      if (!found) return prev;
       const updated = { ...prev, files: newFiles, updatedAt: Date.now() };
       saveProjectToCloud(updated);
       return updated;
@@ -205,7 +218,14 @@ export default function App() {
   };
 
   const handleContentChange = (fileId: string, newContent: string) => {
-    updateFileContentLocally(fileId, newContent);
+    if (fsBuffers[fileId]) {
+      setFsBuffers((prev) => ({
+        ...prev,
+        [fileId]: { ...prev[fileId], content: newContent, dirty: true, updatedAt: Date.now() },
+      }));
+    } else {
+      updateFileContentLocally(fileId, newContent);
+    }
     realtimeSocket.sendFileUpdate(fileId, newContent);
   };
 
@@ -226,7 +246,9 @@ export default function App() {
     return null;
   };
 
-  const activeFile = activeFileId ? findFileById(project.files, activeFileId) : null;
+  const activeFile = activeFileId
+    ? findFileById(project.files, activeFileId) ?? fsBuffers[activeFileId] ?? null
+    : null;
 
   // Sync Language with File Extension
   useEffect(() => {
@@ -240,7 +262,7 @@ export default function App() {
   }, [activeFileId, activeFile]);
 
   const openFiles = openFileIds
-    .map((id) => findFileById(project.files, id))
+    .map((id) => findFileById(project.files, id) ?? fsBuffers[id])
     .filter(Boolean) as FileItem[];
 
   const handleSelectFile = (file: FileItem) => {
@@ -253,6 +275,91 @@ export default function App() {
     }
   };
 
+  // Open a file from the file-system-server by its relative path.
+  const handleOpenFile = (path: string) => {
+    if (!openFileIds.includes(path)) {
+      setOpenFileIds((prev) => [...prev, path]);
+    }
+    setActiveFileId(path);
+    setActiveDiffVersion(null);
+
+    if (fsBuffers[path]) return; // already loaded or loading — keep the cached buffer
+    const name = baseName(path);
+    setFsBuffers((prev) => ({
+      ...prev,
+      [path]: {
+        id: path,
+        name,
+        path,
+        type: 'file',
+        content: '',
+        language: deriveLanguage(name),
+        loaded: false,
+      },
+    }));
+    fileSystem
+      .read(path)
+      .then((content) =>
+        setFsBuffers((prev) => {
+          const cur = prev[path];
+          if (!cur || cur.dirty) return prev; // don't clobber edits typed before load resolved
+          return { ...prev, [path]: { ...cur, content, loaded: true } };
+        })
+      )
+      .catch(() => {
+        // Remove the placeholder so a later reopen retries the read.
+        setFsBuffers((prev) => {
+          const next = { ...prev };
+          delete next[path];
+          return next;
+        });
+      });
+  };
+
+  // Persist the active file-system-server buffer back to disk.
+  const handleSave = async () => {
+    if (!activeFileId) return;
+    const buf = fsBuffers[activeFileId];
+    if (!buf) return; // cloud project files persist via their own store
+    try {
+      await fileSystem.write(buf.path, buf.content || '');
+      setFsBuffers((prev) => ({
+        ...prev,
+        [activeFileId]: { ...prev[activeFileId], dirty: false, updatedAt: Date.now() },
+      }));
+      addLog(`Saved "${buf.path}" to file-system-server`, 'success');
+    } catch (err: any) {
+      addLog(`Save failed: ${err.message}`, 'error');
+    }
+  };
+
+  // Keep open tabs/buffers in sync when the explorer renames an fs path.
+  const handleFsRename = (oldPath: string, newPath: string) => {
+    setFsBuffers((prev) => {
+      const cur = prev[oldPath];
+      if (!cur) return prev;
+      const next = { ...prev };
+      delete next[oldPath];
+      next[newPath] = { ...cur, id: newPath, path: newPath, name: baseName(newPath) };
+      return next;
+    });
+    setOpenFileIds((prev) => prev.map((id) => (id === oldPath ? newPath : id)));
+    setActiveFileId((prev) => (prev === oldPath ? newPath : prev));
+  };
+
+  // Keep open tabs/buffers in sync when the explorer deletes an fs path.
+  const handleFsDelete = (path: string) => {
+    setFsBuffers((prev) => {
+      const next: Record<string, FileItem> = { ...prev };
+      for (const key of Object.keys(prev)) {
+        if (key === path || key.startsWith(`${path}/`)) delete next[key];
+      }
+      return next;
+    });
+    setOpenFileIds((prev) => prev.filter((id) => id !== path && !id.startsWith(`${path}/`)));
+    setActiveFileId((prev) => (prev && (prev === path || prev.startsWith(`${path}/`)) ? null : prev));
+  };
+
   const handleCloseTab = (fileId: string) => {
     const nextTabs = openFileIds.filter((id) => id !== fileId);
     setOpenFileIds(nextTabs);
@@ -261,111 +368,7 @@ export default function App() {
     }
   };
 
-  const handleCreateFile = (parentId: string | null, name: string, isFolder: boolean) => {
-    const newId = (isFolder ? 'folder-' : 'file-') + Date.now();
-    const ext = name.split('.').pop()?.toLowerCase();
-    const langMap: Record<string, string> = {
-      ts: 'typescript',
-      js: 'javascript',
-      py: 'python',
-      cpp: 'cpp',
-      html: 'html',
-      css: 'css',
-      json: 'json',
-      md: 'markdown',
-    };
 
-    const parentPath = parentId ? findFileById(project.files, parentId)?.path : '';
-    const itemPath = parentPath ? `${parentPath}/${name}` : name;
-
-    const newItem: FileItem = {
-      id: newId,
-      name,
-      path: itemPath,
-      type: isFolder ? 'folder' : 'file',
-      parentId,
-      language: isFolder ? undefined : langMap[ext || ''] || 'plaintext',
-      content: isFolder
-        ? undefined
-        : `// ${name}\n// Created in Cloud Studio\n\nconsole.log("Hello from ${name}!");\n`,
-      children: isFolder ? [] : undefined,
-    };
-
-    setProject((prev) => {
-      let newFiles: FileItem[];
-      if (!parentId) {
-        newFiles = [...prev.files, newItem];
-      } else {
-        const addToParent = (items: FileItem[]): FileItem[] => {
-          return items.map((item) => {
-            if (item.id === parentId) {
-              return {
-                ...item,
-                children: [...(item.children || []), newItem],
-              };
-            }
-            if (item.children) {
-              return { ...item, children: addToParent(item.children) };
-            }
-            return item;
-          });
-        };
-        newFiles = addToParent(prev.files);
-      }
-      const updated = { ...prev, files: newFiles, updatedAt: Date.now() };
-      saveProjectToCloud(updated);
-      return updated;
-    });
-
-    if (!isFolder) {
-      setOpenFileIds((prev) => [...prev, newId]);
-      setActiveFileId(newId);
-    }
-    addLog(`Created ${isFolder ? 'folder' : 'file'}: "${itemPath}"`, 'success');
-  };
-
-  const handleDeleteFile = (fileId: string) => {
-    const file = findFileById(project.files, fileId);
-    setProject((prev) => {
-      const deleteRecursive = (items: FileItem[]): FileItem[] => {
-        return items
-          .filter((item) => item.id !== fileId)
-          .map((item) => {
-            if (item.children) {
-              return { ...item, children: deleteRecursive(item.children) };
-            }
-            return item;
-          });
-      };
-      const newFiles = deleteRecursive(prev.files);
-      const updated = { ...prev, files: newFiles, updatedAt: Date.now() };
-      saveProjectToCloud(updated);
-      return updated;
-    });
-
-    handleCloseTab(fileId);
-    if (file) addLog(`Deleted item: "${file.name}"`, 'info');
-  };
-
-  const handleRenameFile = (fileId: string, newName: string) => {
-    setProject((prev) => {
-      const renameRecursive = (items: FileItem[]): FileItem[] => {
-        return items.map((item) => {
-          if (item.id === fileId) {
-            return { ...item, name: newName };
-          }
-          if (item.children) {
-            return { ...item, children: renameRecursive(item.children) };
-          }
-          return item;
-        });
-      };
-      const newFiles = renameRecursive(prev.files);
-      const updated = { ...prev, files: newFiles, updatedAt: Date.now() };
-      saveProjectToCloud(updated);
-      return updated;
-    });
-  };
 
   // Judge0 Code Execution
   const handleExecuteCode = async () => {
@@ -417,6 +420,23 @@ export default function App() {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [activeFile, selectedLanguageId, stdin]);
+
+  // Keyboard shortcut listener (Ctrl+S / Cmd+S to save the active file).
+  // A ref keeps the listener stable without re-attaching on every keystroke.
+  const handleSaveRef = useRef(handleSave);
+  useEffect(() => {
+    handleSaveRef.current = handleSave;
+  });
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+        e.preventDefault();
+        handleSaveRef.current();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   // Version Control & Diffs
   const handleSaveSnapshot = (message: string) => {
@@ -657,9 +677,9 @@ export default function App() {
           files={project.files}
           activeFileId={activeFileId}
           onSelectFile={handleSelectFile}
-          onCreateFile={handleCreateFile}
-          onDeleteFile={handleDeleteFile}
-          onRenameFile={handleRenameFile}
+          onOpenFile={handleOpenFile}
+          onRename={handleFsRename}
+          onDelete={handleFsDelete}
           versions={versions}
           onSaveSnapshot={handleSaveSnapshot}
           onRestoreSnapshot={handleRestoreSnapshot}
