@@ -333,19 +333,21 @@ export default function App() {
     }
   };
 
-  // Keep open tabs/buffers in sync when the explorer renames an fs path.
-  const handleFsRename = (oldPath: string, newPath: string) => {
-    setFsBuffers((prev) => {
-      const cur = prev[oldPath];
-      if (!cur) return prev;
-      const next = { ...prev };
-      delete next[oldPath];
-      next[newPath] = { ...cur, id: newPath, path: newPath, name: baseName(newPath) };
-      return next;
-    });
-    setOpenFileIds((prev) => prev.map((id) => (id === oldPath ? newPath : id)));
-    setActiveFileId((prev) => (prev === oldPath ? newPath : prev));
-  };
+    const parentPath = parentId ? findFileById(project.files, parentId)?.path : '';
+    const itemPath = parentPath ? `${parentPath}/${name}` : name;
+
+    const newItem: FileItem = {
+      id: newId,
+      name,
+      path: itemPath,
+      type: isFolder ? 'folder' : 'file',
+      parentId,
+      language: isFolder ? undefined : langMap[ext || ''] || 'plaintext',
+      content: isFolder
+        ? undefined
+        : `// ${name}\n// Created in Cloud Studio\n\nconsole.log("Hello from ${name}!");\n`,
+      children: isFolder ? [] : undefined,
+    };
 
   // Keep open tabs/buffers in sync when the explorer deletes an fs path.
   const handleFsDelete = (path: string) => {
