@@ -63,7 +63,7 @@ export const EditorArea: React.FC<EditorAreaProps> = ({
   return (
     <div className="flex-1 flex flex-col h-full bg-[#1e1e1e] overflow-hidden select-none">
       {/* File Tabs Bar */}
-      <div className="flex items-center bg-[#252526] text-[#cccccc] text-xs border-b border-[#2d2d2d] overflow-x-auto custom-scrollbar shrink-0">
+      <div className="flex items-center bg-[#252526] text-[#cccccc] text-sm border-b border-[#2d2d2d] overflow-x-auto custom-scrollbar shrink-0">
         {openFiles.map((file) => {
           const isActive = file.id === activeFileId && !diffVersion;
           return (
@@ -97,7 +97,7 @@ export const EditorArea: React.FC<EditorAreaProps> = ({
         {diffVersion && (
           <div className="flex items-center gap-2 px-3 py-2 bg-[#007acc]/20 text-white font-medium border-r border-[#2d2d2d] shrink-0 border-t-2 border-t-amber-400">
             <Layers className="w-3.5 h-3.5 text-amber-400" />
-            <span className="text-xs">Diff vs Hash ({diffVersion.hash})</span>
+            <span className="text-sm">Diff vs Hash ({diffVersion.hash})</span>
             <button
               onClick={onCloseDiff}
               className="p-0.5 rounded hover:bg-[#383838]"
@@ -111,7 +111,7 @@ export const EditorArea: React.FC<EditorAreaProps> = ({
 
       {/* Editor Active Header Presence Bar */}
       {activeFile && (
-        <div className="flex items-center justify-between px-4 py-1.5 bg-[#181818] border-b border-[#2d2d2d] text-xs text-[#858585]">
+        <div className="flex items-center justify-between px-4 py-1.5 bg-[#181818] border-b border-[#2d2d2d] text-sm text-[#858585]">
           <div className="flex items-center gap-2">
             <span className="text-[#007acc] font-mono">{activeFile.path}</span>
             <span className="text-[10px] bg-[#2a2d2e] px-1.5 py-0.2 rounded text-[#aaaaaa]">
@@ -195,7 +195,7 @@ export const EditorArea: React.FC<EditorAreaProps> = ({
               <FileCode className="w-10 h-10 text-[#007acc]" />
             </div>
             <p className="text-sm font-medium">No file open in editor</p>
-            <p className="text-xs text-[#666666]">
+            <p className="text-sm text-[#666666]">
               Select a file from the Explorer sidebar or create a new file
             </p>
           </div>

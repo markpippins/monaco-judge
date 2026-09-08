@@ -51,7 +51,7 @@ export const SearchPanel: React.FC<SearchPanelProps> = ({ files, onSelectFile })
   }
 
   return (
-    <div className="flex flex-col h-full bg-[#252526] text-[#cccccc] text-xs">
+    <div className="flex flex-col h-full bg-[#252526] text-[#cccccc] text-sm">
       <div className="flex items-center px-3 py-2 border-b border-[#333333] tracking-wide font-semibold text-[11px] uppercase text-[#bbbbbb]">
         <span>SEARCH WORKSPACE</span>
       </div>
@@ -63,7 +63,7 @@ export const SearchPanel: React.FC<SearchPanelProps> = ({ files, onSelectFile })
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="Search text in workspace..."
-            className="w-full bg-[#1e1e1e] border border-[#3c3c3c] focus:border-[#007acc] text-white text-xs pl-8 pr-3 py-1.5 rounded outline-none"
+            className="w-full bg-[#1e1e1e] border border-[#3c3c3c] focus:border-[#007acc] text-white text-sm pl-8 pr-3 py-1.5 rounded outline-none"
           />
           <SearchIcon className="w-4 h-4 text-[#858585] absolute left-2.5 pointer-events-none" />
         </div>

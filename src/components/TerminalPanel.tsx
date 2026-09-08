@@ -83,7 +83,7 @@ export const TerminalPanel: React.FC<TerminalPanelProps> = ({
       }`}
     >
       {/* Terminal Header */}
-      <div className="flex items-center justify-between px-3 py-1.5 bg-[#252526] border-b border-[#2d2d2d] text-xs text-[#cccccc] select-none shrink-0">
+      <div className="flex items-center justify-between px-3 py-1.5 bg-[#252526] border-b border-[#2d2d2d] text-sm text-[#cccccc] select-none shrink-0">
         <div className="flex items-center gap-4">
           <button
             onClick={() => setActiveTab('terminal')}
@@ -117,7 +117,7 @@ export const TerminalPanel: React.FC<TerminalPanelProps> = ({
           <button
             onClick={onExecuteCode}
             title="Run Code on Judge0 (Ctrl+Enter)"
-            className="flex items-center gap-1 px-2 py-0.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded text-xs font-medium cursor-pointer"
+            className="flex items-center gap-1 px-2 py-0.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded text-sm font-medium cursor-pointer"
           >
             <Play className="w-3 h-3 fill-current" />
             <span>Run Code</span>
@@ -155,7 +155,7 @@ export const TerminalPanel: React.FC<TerminalPanelProps> = ({
 
       {/* Terminal Tab Content */}
       {activeTab === 'terminal' && (
-        <div className="flex-1 overflow-y-auto p-3 font-mono text-xs bg-[#181818] text-[#cccccc] space-y-1.5 custom-scrollbar">
+        <div className="flex-1 overflow-y-auto p-3 font-mono text-sm bg-[#181818] text-[#cccccc] space-y-1.5 custom-scrollbar">
           {logs.map((log) => (
             <div key={log.id} className="flex items-start gap-2">
               <span className="text-[#666666] shrink-0 text-[10px] select-none">
@@ -190,7 +190,7 @@ export const TerminalPanel: React.FC<TerminalPanelProps> = ({
               onChange={(e) => setCommandInput(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder="Type command (help, run, ls, cat, theme, clear)..."
-              className="flex-1 bg-transparent text-white font-mono text-xs outline-none border-none"
+              className="flex-1 bg-transparent text-white font-mono text-sm outline-none border-none"
             />
           </form>
           <div ref={bottomRef} />
@@ -199,7 +199,7 @@ export const TerminalPanel: React.FC<TerminalPanelProps> = ({
 
       {/* Judge0 Output Tab Content */}
       {activeTab === 'output' && (
-        <div className="flex-1 overflow-y-auto p-3 font-mono text-xs bg-[#181818] text-[#cccccc] custom-scrollbar">
+        <div className="flex-1 overflow-y-auto p-3 font-mono text-sm bg-[#181818] text-[#cccccc] custom-scrollbar">
           {lastExecutionResult ? (
             <div className="space-y-2">
               <div className="flex items-center justify-between pb-2 border-b border-[#2d2d2d]">

@@ -10,6 +10,8 @@ export interface FileItem {
   parentId?: string | null;
   children?: FileItem[];
   updatedAt?: number;
+  dirty?: boolean;
+  loaded?: boolean;
 }
 
 export interface Project {

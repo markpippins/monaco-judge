@@ -12,9 +12,9 @@ interface SidebarProps {
   files: FileItem[];
   activeFileId: string | null;
   onSelectFile: (file: FileItem) => void;
-  onCreateFile: (parentId: string | null, name: string, isFolder: boolean) => void;
-  onDeleteFile: (fileId: string) => void;
-  onRenameFile: (fileId: string, newName: string) => void;
+  onOpenFile: (path: string) => void;
+  onRename: (oldPath: string, newPath: string) => void;
+  onDelete: (path: string) => void;
   versions: VersionSnapshot[];
   onSaveSnapshot: (message: string) => void;
   onRestoreSnapshot: (version: VersionSnapshot) => void;
@@ -45,9 +45,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
   files,
   activeFileId,
   onSelectFile,
-  onCreateFile,
-  onDeleteFile,
-  onRenameFile,
+  onOpenFile,
+  onRename,
+  onDelete,
   versions,
   onSaveSnapshot,
   onRestoreSnapshot,
@@ -78,12 +78,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
     <div className="w-64 sm:w-72 md:w-80 h-full bg-[#252526] border-r border-[#2d2d2d] flex flex-col z-10 shrink-0 select-none overflow-hidden">
       {activeTab === 'explorer' && (
         <FileTree
-          files={files}
-          activeFileId={activeFileId}
-          onSelectFile={onSelectFile}
-          onCreateFile={onCreateFile}
-          onDeleteFile={onDeleteFile}
-          onRenameFile={onRenameFile}
+          activePath={activeFileId}
+          onOpenFile={onOpenFile}
+          onRename={onRename}
+          onDelete={onDelete}
         />
       )}
 

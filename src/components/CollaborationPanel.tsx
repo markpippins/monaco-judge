@@ -50,7 +50,7 @@ export const CollaborationPanel: React.FC<CollaborationPanelProps> = ({
   };
 
   return (
-    <div className="flex flex-col h-full bg-[#252526] text-[#cccccc] text-xs">
+    <div className="flex flex-col h-full bg-[#252526] text-[#cccccc] text-sm">
       <div className="flex items-center justify-between px-3 py-2 border-b border-[#333333] tracking-wide font-semibold text-[11px] uppercase text-[#bbbbbb]">
         <span className="flex items-center gap-1.5 text-blue-400">
           <Users className="w-4 h-4" />
@@ -75,7 +75,7 @@ export const CollaborationPanel: React.FC<CollaborationPanelProps> = ({
               value={roomInput}
               onChange={(e) => setRoomInput(e.target.value)}
               placeholder="e.g. dev-team-room"
-              className="flex-1 bg-[#252526] border border-[#3c3c3c] focus:border-[#007acc] text-white text-xs px-2 py-1.5 rounded outline-none font-mono"
+              className="flex-1 bg-[#252526] border border-[#3c3c3c] focus:border-[#007acc] text-white text-sm px-2 py-1.5 rounded outline-none font-mono"
             />
             <button
               type="submit"
@@ -124,7 +124,7 @@ export const CollaborationPanel: React.FC<CollaborationPanelProps> = ({
               value={nameInput}
               onChange={(e) => setNameInput(e.target.value)}
               placeholder="Your Name"
-              className="w-full bg-[#252526] border border-[#007acc] text-white text-xs px-2 py-1 rounded outline-none"
+              className="w-full bg-[#252526] border border-[#007acc] text-white text-sm px-2 py-1 rounded outline-none"
             />
             <div>
               <div className="text-[10px] text-[#858585] mb-1">Cursor & Avatar Color:</div>
@@ -144,7 +144,7 @@ export const CollaborationPanel: React.FC<CollaborationPanelProps> = ({
             </div>
             <button
               type="submit"
-              className="w-full py-1 bg-emerald-600 hover:bg-emerald-500 text-white rounded text-xs font-semibold"
+              className="w-full py-1 bg-emerald-600 hover:bg-emerald-500 text-white rounded text-sm font-semibold"
             >
               Save Presence Profile
             </button>
@@ -152,7 +152,7 @@ export const CollaborationPanel: React.FC<CollaborationPanelProps> = ({
         ) : (
           <div className="flex items-center gap-2 bg-[#252526] p-2 rounded border border-[#2d2d2d]">
             <div
-              className="w-7 h-7 rounded-full flex items-center justify-center font-bold text-white text-xs shrink-0"
+              className="w-7 h-7 rounded-full flex items-center justify-center font-bold text-white text-sm shrink-0"
               style={{ backgroundColor: currentUser.color }}
             >
               {currentUser.name.substring(0, 2).toUpperCase()}
